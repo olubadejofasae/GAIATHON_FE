@@ -8,7 +8,8 @@ import {
   Timeline,
   Modal,
   Radio,
-  Input
+  Input,
+  Spin
 } from "antd";
 import { MenuUnfoldOutlined } from "@ant-design/icons";
 import Paragraph from "antd/lib/typography/Paragraph";
@@ -30,6 +31,7 @@ function Home() {
   const [customLanguage, setCustomLanguage] = useState('');
   const [apiData, setApiData] = useState([]);
   const [lastFetchTime, setLastFetchTime] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [lastDataId, setLastDataId] = useState(1);
   const [predictions, setPredictions] = useState({
     rainfall: { probability: 0, intensity: 'Low' },
@@ -127,8 +129,22 @@ function Home() {
       "MQ2": latestData.pollution_level || 0,
       "MQ7": latestData.co_level || 0,
       "Rain": latestData.raining || false,
-      "GPS": `${latestData.latitude || 0},${latestData.longitude || 0}`
+      "GPS": `${latestData.latitude || 0},${latestData.longitude || 0}`,
+      "temperature": latestData.temperature || 0,
+      "humidity": latestData.humidity || 0,
+      "atm_pressure": latestData.atm_pressure || 0,
+      "heat Index": latestData.heat_index || 0,
+      "enthalpy": latestData.enthalpy || 0,
+      "soil_moisture": latestData.soil_moisture || 0,
+      "sunlight_intensity": latestData.sunlight_intensity || 0,
+      "pollution_level": latestData.pollution_level || 0,
+      "co_level": latestData.co_level || 0,
+      "raining": latestData.raining || false,
+      "latitude": latestData.latitude || 0,
+      "longitude": latestData.longitude || 0,
     };
+
+    setLoading(true);
     
     try {
       const response = await fetch('https://api.gaiathonfuta.online/model/predict-hazard/', {
@@ -140,12 +156,38 @@ function Home() {
       });
       
       if (response.ok) {
-        const predictionData = await response.json();
-        setPredictions(predictionData);
-        setHasPredictions(true);
-      }
+      const data = await response.json();
+
+      const transformed = {
+        rainfall: {
+          probability: data.rainfall_probability,
+          intensity: data.rainfall_intensity_mm
+        },
+        flooding: {
+          probability: data.flooding_probability,
+          severity: data.flooding_severity
+        },
+        wildfire: {
+          probability: data.wildfire_probability,
+          risk: data.wildfire_probability > 50 ? "High" : "Low"
+        },
+        aqi: {
+          level: data.pm25,
+          status: data.aqi
+        },
+        heatwave: {
+          probability: data.heatwave_probability
+        },
+        alerts: data.critical_alerts
+      };
+
+      setPredictions(transformed);
+      setHasPredictions(true);
+    }
     } catch (error) {
       console.error('Error making prediction:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -237,41 +279,48 @@ function Home() {
                   AI-powered environmental hazard predictions
                 </Paragraph>
               </div>
+              <Spin spinning={loading} tip="Making predictions with the last data from the device...." style={{ display: loading ? 'flex' : 'none', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                <div style={{ padding: '20px 0' }}>
+                  <Row gutter={[16, 16]}>
+                    <Col span={12}>
+                      <div style={{ textAlign: 'center', padding: '10px', border: '2px solid #1890ff', borderRadius: '8px', backgroundColor: '#f0f8ff' }}>
+                        <Title level={5} style={{ margin: 0, color: '#1890ff', fontWeight: 'bold' }}>Rainfall</Title>
+                        <Text style={{ fontWeight: 'bold' }}>Probability: {predictions.rainfall?.probability || 0}%</Text><br/>
+                        <Text style={{ fontWeight: 'bold' }}>Intensity: {predictions.rainfall?.intensity || 'Low'}</Text>
+                      </div>
+                    </Col>
+                    <Col span={12}>
+                      <div style={{ textAlign: 'center', padding: '10px', border: '2px solid #ff4d4f', borderRadius: '8px', backgroundColor: '#fff0f0' }}>
+                        <Title level={5} style={{ margin: 0, color: '#ff4d4f', fontWeight: 'bold' }}>Flooding</Title>
+                        <Text style={{ fontWeight: 'bold' }}>Probability: {predictions.flooding?.probability || 0}%</Text><br/>
+                        <Text style={{ fontWeight: 'bold' }}>Severity: {predictions.flooding?.severity || 'Low'}</Text>
+                      </div>
+                    </Col>
+                    <Col span={12}>
+                      <div style={{ textAlign: 'center', padding: '10px', border: '2px solid #ff7a45', borderRadius: '8px', backgroundColor: '#fff7f0' }}>
+                        <Title level={5} style={{ margin: 0, color: '#ff7a45', fontWeight: 'bold' }}>Wildfire</Title>
+                        <Text style={{ fontWeight: 'bold' }}>Probability: {predictions.wildfire?.probability || 0}%</Text><br/>
+                        <Text style={{ fontWeight: 'bold' }}>Risk: {predictions.wildfire?.risk || 'Low'}</Text>
+                      </div>
+                    </Col>
+                    <Col span={12}>
+                      <div style={{ textAlign: 'center', padding: '10px', border: '2px solid #52c41a', borderRadius: '8px', backgroundColor: '#f0fff0' }}>
+                        <Title level={5} style={{ margin: 0, color: '#52c41a', fontWeight: 'bold' }}>AQI</Title>
+                        <Text style={{ fontWeight: 'bold' }}>Level: {predictions.aqi?.level || 0}</Text><br/>
+                        <Text style={{ fontWeight: 'bold' }}>Status: {predictions.aqi?.status || 'Good'}</Text>
+                      </div>
+                    </Col>
+                    <Col span={24}>
+                      <div style={{ textAlign: 'center', padding: '10px', border: '2px solid #722ed1', borderRadius: '8px', backgroundColor: '#f9f0ff' }}>
+                        <Title level={5} style={{ margin: 0, color: '#722ed1', fontWeight: 'bold' }}>Critical Alerts</Title>
+                        <Text style={{ fontWeight: 'bold' }}>{predictions.alerts || 'No critical alerts at this time.'}</Text>
+                      </div>
+                    </Col>
+                  </Row>
+                </div>
+              </Spin>
               
-              <div style={{ padding: '20px 0' }}>
-                <Row gutter={[16, 16]}>
-                  <Col span={12}>
-                    <div style={{ textAlign: 'center', padding: '10px', border: '2px solid #1890ff', borderRadius: '8px', backgroundColor: '#f0f8ff' }}>
-                      <Title level={5} style={{ margin: 0, color: '#1890ff', fontWeight: 'bold' }}>Rainfall</Title>
-                      <Text style={{ fontWeight: 'bold' }}>Probability: {predictions.rainfall?.probability || 0}%</Text><br/>
-                      <Text style={{ fontWeight: 'bold' }}>Intensity: {predictions.rainfall?.intensity || 'Low'}</Text>
-                    </div>
-                  </Col>
-                  <Col span={12}>
-                    <div style={{ textAlign: 'center', padding: '10px', border: '2px solid #ff4d4f', borderRadius: '8px', backgroundColor: '#fff0f0' }}>
-                      <Title level={5} style={{ margin: 0, color: '#ff4d4f', fontWeight: 'bold' }}>Flooding</Title>
-                      <Text style={{ fontWeight: 'bold' }}>Probability: {predictions.flooding?.probability || 0}%</Text><br/>
-                      <Text style={{ fontWeight: 'bold' }}>Severity: {predictions.flooding?.severity || 'Low'}</Text>
-                    </div>
-                  </Col>
-                  <Col span={12}>
-                    <div style={{ textAlign: 'center', padding: '10px', border: '2px solid #ff7a45', borderRadius: '8px', backgroundColor: '#fff7f0' }}>
-                      <Title level={5} style={{ margin: 0, color: '#ff7a45', fontWeight: 'bold' }}>Wildfire</Title>
-                      <Text style={{ fontWeight: 'bold' }}>Probability: {predictions.wildfire?.probability || 0}%</Text><br/>
-                      <Text style={{ fontWeight: 'bold' }}>Risk: {predictions.wildfire?.risk || 'Low'}</Text>
-                    </div>
-                  </Col>
-                  <Col span={12}>
-                    <div style={{ textAlign: 'center', padding: '10px', border: '2px solid #52c41a', borderRadius: '8px', backgroundColor: '#f0fff0' }}>
-                      <Title level={5} style={{ margin: 0, color: '#52c41a', fontWeight: 'bold' }}>AQI</Title>
-                      <Text style={{ fontWeight: 'bold' }}>Level: {predictions.aqi?.level || 0}</Text><br/>
-                      <Text style={{ fontWeight: 'bold' }}>Status: {predictions.aqi?.status || 'Good'}</Text>
-                    </div>
-                  </Col>
-                </Row>
-              </div>
-              
-              <div style={{ marginTop: '20px', display: 'flex', gap: '10px', flexDirection: 'column' }}>
+              <div style={{ marginTop: '2px', display: 'flex', gap: '10px', flexDirection: 'column' }}>
                 <Button 
                   style={{ 
                     backgroundColor: deviceConnected ? '#52c41a' : '#ff4d4f', 
@@ -288,7 +337,7 @@ function Home() {
                   type="primary"
                   style={{ backgroundColor: '#1890ff', fontWeight: 'bold', height: '40px' }}
                   onClick={handleGetPredictions}
-                  disabled={!deviceConnected || apiData.length === 0}
+                  loading={loading}
                 >
                   Make Predictions
                 </Button>
@@ -304,7 +353,7 @@ function Home() {
                 </Paragraph>
               </div>
               
-              <div style={{ padding: '40px 20px', paddingTop:'80px', display: 'flex', flexDirection: 'column', gap: '20px', height: '100%', justifyContent: 'center' }}>
+              <div style={{ padding: '40px 20px', paddingTop:'120px', display: 'flex', flexDirection: 'column', gap: '20px', height: '100%', justifyContent: 'center' }}>
                 <Button 
                   type="primary" 
                   size="large" 
