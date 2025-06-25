@@ -287,7 +287,7 @@ function Home() {
                   onClick={handleGetPredictions}
                   disabled={!deviceConnected || apiData.length === 0}
                 >
-                  Get Predictions
+                  Make Predictions
                 </Button>
               </div>
             </Card>
@@ -297,7 +297,7 @@ function Home() {
               <div className="project-ant">
                 <Title level={5} style={{ fontWeight: 'bold' }}>AI Assistant</Title>
                 <Paragraph className="lastweek" style={{ fontWeight: '500' }}>
-                  Get personalized explanations of your data and predictions
+                  Get personalized explanations of data and predictions
                 </Paragraph>
               </div>
               
@@ -308,7 +308,7 @@ function Home() {
                   style={{ height: '60px', fontSize: '16px', fontWeight: 'bold' }}
                   onClick={() => handleExplanationRequest('data')}
                 >
-                  Explain recent Data trend from Device to me 
+                  Explain Data Trend
                 </Button>
                 <Button 
                   type="primary" 
@@ -316,7 +316,7 @@ function Home() {
                   style={{ height: '60px', fontSize: '16px', borderColor: '#52c41a', fontWeight: 'bold' }}
                   onClick={() => handleExplanationRequest('predictions')}
                 >
-                  Explain These Predictions to Me
+                  Explain Predictions
                 </Button>
               </div>
             </Card>

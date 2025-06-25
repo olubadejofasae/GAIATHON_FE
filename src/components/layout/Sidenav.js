@@ -121,18 +121,21 @@ function Sidenav({ color }) {
           </NavLink>
         </Menu.Item>
         <Menu.Item key="4">
-          <NavLink to="/">
+          <a
+            href="https://gaiathon.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <span
               className="icon"
               style={{
                 background: page === "profile" ? color : "",
               }}
             >
+              {tables}
             </span>
             <span className="label">Gaiathon competition</span>
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item className="menu-item-header" key="5">
+          </a>
         </Menu.Item>
       </Menu>
       <div className="aside-footer">
