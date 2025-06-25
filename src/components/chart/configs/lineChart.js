@@ -2,15 +2,16 @@ const lineChart = {
   series: [
     {
       name: "Mobile apps",
-      data: [350, 40, 300, 220, 500, 250, 400, 230, 500],
+      data: [100, 350, 40, 300, 220, 500, 250, 400, 230, 500, 380, 420],
       offsetY: 0,
     },
     {
       name: "Websites",
-      data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
+      data: [50, 30, 90, 40, 140, 290, 290, 340, 230, 400, 310, 370],
       offsetY: 0,
     },
   ],
+
 
   options: {
     chart: {
@@ -62,16 +63,10 @@ const lineChart = {
         },
       },
       categories: [
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-      ],
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+      ]
+
     },
 
     tooltip: {

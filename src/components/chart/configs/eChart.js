@@ -1,11 +1,12 @@
 const eChart = {
   series: [
     {
-      name: "Sales",
-      data: [450, 200, 100, 220, 500, 100, 400, 230, 500],
-      color: "#fff",
+      name: "Rainfall (mm)",
+      data: [12, 18, 9, 22, 15, 11, 17],
+      colors: '#FFFFFF'
     },
   ],
+
 
   options: {
     chart: {
@@ -38,17 +39,7 @@ const eChart = {
       strokeDashArray: 2,
     },
     xaxis: {
-      categories: [
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-      ],
+      categories: ["Sunday", "Monday", "Tuesday", "Wednesday","Thursday", "Friday", "Saturday"],
       labels: {
         show: true,
         align: "right",
