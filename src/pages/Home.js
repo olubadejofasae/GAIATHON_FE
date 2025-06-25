@@ -68,14 +68,17 @@ function Home() {
             humidity: parseFloat(item.humidity) || 0.0,
             rainfall: item.raining ? 25.0 : 0.0,
             windSpeed: parseFloat(item.wind_speed) || 0.0,
+            soilMoisture: parseFloat(item.soil_moisture) || 0.0,
             
             // Side graph 1 data
             pressure: Math.floor(item.atm_pressure || 0),
             heatIndex: parseFloat(item.heat_index) || 0.0,
+            enthalpy: parseFloat(item.enthalpy) || 0.0,
             
             // Side graph 2 data
             co2: item.co_level || 0,
             batteryVoltage: parseFloat(item.battery_voltage) || 0.0,
+            pollutionLevel: item.pollution_level || 0,
             
             // Common data
             windDirection: item.wind_direction || 0,
@@ -389,11 +392,21 @@ function Home() {
                       activeDot={{ r: 6, strokeWidth: 2 }}
                     />
                     <Line 
+                      yAxisId="left" 
+                      type="monotone" 
+                      dataKey="soilMoisture" 
+                      stroke="#8B4513" 
+                      name="Soil Moisture (%)" 
+                      strokeWidth={3}
+                      dot={{ r: 4, strokeWidth: 2 }}
+                      activeDot={{ r: 6, strokeWidth: 2 }}
+                    />
+                    <Line 
                       yAxisId="right" 
                       type="monotone" 
                       dataKey="rainfall" 
                       stroke="#0088FE" 
-                      name="Rainfall (mm)" 
+                      name="Rainfall" 
                       strokeWidth={3}
                       dot={{ r: 4, strokeWidth: 2 }}
                       activeDot={{ r: 6, strokeWidth: 2 }}
@@ -440,15 +453,17 @@ function Home() {
                   {[
                     { name: "Temperature", value: `${currentValues.temperature} °C`, color: currentValues.temperature > 25 ? "red" : "blue" },
                     { name: "Humidity", value: `${currentValues.humidity}%`, color: currentValues.humidity > 70 ? "red" : "green" },
-                    { name: "Rainfall", value: `${currentValues.rainfall} mm`, color: currentValues.rainfall > 15 ? "blue" : "gray" },
-                    { name: "Wind Speed", value: `${currentValues.windSpeed} km/h`, color: currentValues.windSpeed > 30 ? "red" : "green" }
+                    { name: "Sunlight Intensity", value: `${currentValues.sunlight_intensity} %`, color: currentValues.sunlight_intensity > 50 ? "red" : "green" },
+                    { name: "Wind Speed", value: `${currentValues.windSpeed} km/h`, color: currentValues.windSpeed > 30 ? "red" : "green" },
+                    { name: "Soil Moisture", value: `${currentValues.soilMoisture} %`, color: currentValues.soilMoisture < 30 ? "red" : "green" }
                   ].map((item, index) => (
                     <Timeline.Item color={item.color} key={index}>
                       <Title level={5} style={{ fontWeight: 'bold' }}>{item.name}</Title>
                       <Text style={{ fontWeight: 'bold' }}>{item.value}</Text>
                     </Timeline.Item>
                   ))}
-                </Timeline>
+                </Timeline><br/>
+                <p><strong>N.B:  Rainfall is either 25 or 0 o n the graph, 25 to denote rainfall at the moment and 0 to denote no raifall </strong></p>
               </div>
             </Card>
           </Col>
@@ -483,6 +498,13 @@ function Home() {
                       tick={{ fontSize: 10, fontWeight: 'bold' }}
                       strokeWidth={2}
                     />
+                    <YAxis 
+                      yAxisId="right" 
+                      orientation="right" 
+                      stroke="#00C49F"
+                      tick={{ fontSize: 10, fontWeight: 'bold' }}
+                      strokeWidth={2}
+                    />
                     <RechartsTooltip 
                       contentStyle={{ 
                         backgroundColor: '#fff', 
@@ -504,9 +526,19 @@ function Home() {
                     <Line 
                       yAxisId="left" 
                       type="monotone" 
-                      dataKey="heatIndex" 
-                      stroke="#cc0000" 
-                      name="Heat Index" 
+                      dataKey="windDirection" 
+                      stroke="#8B4513" 
+                      name="Wind Direction" 
+                      strokeWidth={3}
+                      dot={{ r: 3, strokeWidth: 2 }}
+                      activeDot={{ r: 5, strokeWidth: 2 }}
+                    />
+                    <Line 
+                      yAxisId="left" 
+                      type="monotone" 
+                      dataKey="enthalpy" 
+                      stroke="#0000FF" 
+                      name="Enthalpy (J/K)" 
                       strokeWidth={3}
                       dot={{ r: 3, strokeWidth: 2 }}
                       activeDot={{ r: 5, strokeWidth: 2 }}
@@ -552,7 +584,7 @@ function Home() {
                       yAxisId="left" 
                       type="monotone" 
                       dataKey="co2" 
-                      stroke="#00AA00" 
+                      stroke="#003366" 
                       name="CO2 (ppm)" 
                       strokeWidth={3}
                       dot={{ r: 3, strokeWidth: 2 }}
@@ -568,19 +600,31 @@ function Home() {
                       dot={{ r: 3, strokeWidth: 2 }}
                       activeDot={{ r: 5, strokeWidth: 2 }}
                     />
+                    <Line 
+                      yAxisId="left" 
+                      type="monotone" 
+                      dataKey="heatIndex" 
+                      stroke="#cc0000" 
+                      name="Heat Index (C)" 
+                      strokeWidth={3}
+                      dot={{ r: 3, strokeWidth: 2 }}
+                      activeDot={{ r: 5, strokeWidth: 2 }}
+                    />
                   </RechartsLineChart>
                 </ResponsiveContainer>
               </div>
               
               {/* Additional Values Timeline */}
               <div className="timeline-box" style={{marginLeft: 20}}>
-                <Title level={5} style={{ fontWeight: 'bold' }}>Additional Values</Title>
+                <Title level={5} style={{ fontWeight: 'bold', paddingBottom: 20 }}>Additional Values</Title>
                 <Timeline className="timelinelist" reverse={reverse}>
                   {[
                     { name: "Pressure", value: `${currentValues.pressure} hPa`, color: "blue" },
                     { name: "Heat Index", value: `${currentValues.heatIndex}`, color: currentValues.heatIndex > 30 ? "red" : "orange" },
                     { name: "CO2 Level", value: `${currentValues.co2} ppm`, color: currentValues.co2 > 500 ? "red" : "green" },
-                    { name: "Battery", value: `${currentValues.batteryVoltage}V`, color: currentValues.batteryVoltage < 11.5 ? "red" : "green" }
+                    { name: "Battery", value: `${currentValues.batteryVoltage} V`, color: currentValues.batteryVoltage < 11.5 ? "red" : "green" },
+                    { name: "Wind Direction", value: `${currentValues.windDirection}`, color: currentValues.windDirection < 11.5 ? "red" : "green" },
+                    { name: "Enthalpy", value: `${currentValues.enthalpy} J/K`, color: currentValues.enthalpy < 11.5 ? "red" : "green" }
                   ].map((item, index) => (
                     <Timeline.Item color={item.color} key={index}>
                       <Title level={5} style={{ fontWeight: 'bold' }}>{item.name}</Title>
