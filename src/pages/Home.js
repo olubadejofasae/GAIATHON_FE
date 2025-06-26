@@ -621,7 +621,7 @@ function Home() {
                     </Timeline.Item>
                   ))}
                 </Timeline><br/>
-                <p><strong>N.B:  Rainfall is either 50 or 0 o n the graph, 25 to denote rainfall at the moment and 0 to denote no raifall </strong></p>
+                <p><strong>N.B:  Rainfall is either 50 or 0 o n the graph, 50 to denote rainfall at the moment and 0 to denote no raifall </strong></p>
               </div>
             </Card>
           </Col>
