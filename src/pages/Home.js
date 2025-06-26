@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import ReactMarkdown from "react-markdown";
 import {
   Card,
   Col,
@@ -32,6 +33,9 @@ function Home() {
   const [apiData, setApiData] = useState([]);
   const [lastFetchTime, setLastFetchTime] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [explanationLoading, setExplanationLoading] = useState(false);
+  const [explanationResult, setExplanationResult] = useState('');
+  const [showExplanation, setShowExplanation] = useState(false);
   const [lastDataId, setLastDataId] = useState(1);
   const [predictions, setPredictions] = useState({
     rainfall: { probability: 0, intensity: 'Low' },
@@ -201,9 +205,52 @@ function Home() {
     setShowLanguageModal(true);
   };
 
-  const handleLanguageSelect = () => {
+  const handleLanguageSelect = async () => {
     setShowLanguageModal(false);
-    console.log(`Explaining ${explanationType} for ${selectedProfession || customProfession} in ${selectedLanguage || customLanguage}`);
+    const profession = selectedProfession || customProfession || "user";
+    const language = selectedLanguage || customLanguage || "English";
+
+    const endpoint =
+      explanationType === "predictions"
+        ? "https://api.gaiathonfuta.online/model/explain-prediction/"
+        : "https://api.gaiathonfuta.online/model/explain-recent-trends/";
+
+    const payload =
+      explanationType === "predictions"
+        ? {
+            prediction: predictions,
+            use_case: profession,
+            language,
+          }
+        : {
+            recent_data: apiData.slice(-10), // last 10 entries
+            use_case: profession,
+            language,
+          };
+
+    setExplanationLoading(true);
+
+    try {
+      setExplanationResult("");
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await res.json();
+      if (result && result.explanation) {
+        setExplanationResult(result.explanation);
+        setShowExplanation(true);
+      }
+    } catch (err) {
+      setExplanationResult("❗ Failed to generate explanation.");
+      setShowExplanation(true);
+    } finally {
+      setExplanationLoading(false);
+    }
   };
 
   const currentValues = currentData.length > 0 ? currentData[currentData.length - 1] : {
@@ -352,25 +399,70 @@ function Home() {
                   Get personalized explanations of data and predictions
                 </Paragraph>
               </div>
-              
-              <div style={{ padding: '40px 20px', paddingTop:'120px', display: 'flex', flexDirection: 'column', gap: '20px', height: '100%', justifyContent: 'center' }}>
-                <Button 
-                  type="primary" 
-                  size="large" 
-                  style={{ height: '60px', fontSize: '16px', fontWeight: 'bold' }}
-                  onClick={() => handleExplanationRequest('data')}
-                >
-                  Explain Data Trend
-                </Button>
-                <Button 
-                  type="primary" 
-                  size="large" 
-                  style={{ height: '60px', fontSize: '16px', borderColor: '#52c41a', fontWeight: 'bold' }}
-                  onClick={() => handleExplanationRequest('predictions')}
-                >
-                  Explain Predictions
-                </Button>
-              </div>
+              <Spin spinning={explanationLoading} tip="Generating explanation..." style={{ display: explanationLoading ? 'flex' : 'none', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                {!showExplanation ? (
+                  <div style={{ padding: '40px 20px', paddingTop: '120px', display: 'flex', flexDirection: 'column', gap: '20px', height: '100%', justifyContent: 'center' }}>
+                    <Button 
+                      type="primary" 
+                      size="large" 
+                      style={{ height: '60px', fontSize: '16px', fontWeight: 'bold' }}
+                      onClick={() => handleExplanationRequest('data')}
+                    >
+                      Explain Data Trend
+                    </Button>
+                    <Button 
+                      type="primary" 
+                      size="large" 
+                      style={{ height: '60px', fontSize: '16px', borderColor: '#52c41a', fontWeight: 'bold' }}
+                      onClick={() => handleExplanationRequest('predictions')}
+                    >
+                      Explain Predictions
+                    </Button>
+                  </div>
+                ) : (
+                    <div style={{
+                      maxHeight: '400px',
+                      overflowY: 'auto',
+                      padding: '16px',
+                      backgroundColor: '#f9f9f9',
+                      border: '1px solid #e8e8e8',
+                      borderRadius: '8px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between'
+                    }}>
+                      {explanationLoading ? (
+                        <div style={{ textAlign: 'center', marginTop: '120px' }}>
+                          
+                        </div>
+                      ) : (
+                        <ReactMarkdown
+                          children={explanationResult}
+                          components={{
+                            h1: ({ node, ...props }) => <Title level={1} {...props} />,
+                            h2: ({ node, ...props }) => <Title level={2} {...props} />,
+                            h3: ({ node, ...props }) => <Title level={3} {...props} />,
+                            strong: ({ node, ...props }) => <strong style={{ fontWeight: 'bold' }} {...props} />,
+                            p: ({ node, ...props }) => <p style={{ marginBottom: '12px', lineHeight: 1.6 }} {...props} />,
+                            li: ({ node, ...props }) => <li style={{ marginLeft: '20px' }} {...props} />
+                          }}
+                        />
+                      )}
+                      <Button
+                        onClick={() => setShowExplanation(false)}
+                        style={{
+                          alignSelf: 'flex-end',
+                          backgroundColor: '#1890ff',
+                          color: 'white',
+                          fontWeight: 'bold',
+                          marginTop: '12px'
+                        }}
+                      >
+                        Back
+                      </Button>
+                    </div>
+                )}
+              </Spin>
             </Card>
           </Col>
         </Row>
