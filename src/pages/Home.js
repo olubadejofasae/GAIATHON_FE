@@ -19,7 +19,7 @@ import { LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tool
 function Home() {
   const { Title, Text } = Typography;
 
-  const [reverse, setReverse] = useState(false);
+  const [reverse] = useState(false);
   const [currentData, setCurrentData] = useState([]);
   const [deviceConnected, setDeviceConnected] = useState(true);
   const [setHasPredictions] = useState(false);
@@ -33,6 +33,7 @@ function Home() {
   const [apiData, setApiData] = useState([]);
   const [lastFetchTime, setLastFetchTime] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [exportLoading, setExportLoading] = useState(false);
   const [locationState, setLocationState] = useState("Fetching...");
   const [explanationLoading, setExplanationLoading] = useState(false);
   const [explanationResult, setExplanationResult] = useState('');
@@ -191,6 +192,86 @@ function Home() {
       console.error('Error making prediction:', error);
     } finally {
       setLoading(false);
+    }
+  };
+  const handleExportToCSV = async () => {
+    setExportLoading(true);
+    
+    try {
+      // Fetch all data from the API
+      const response = await fetch('https://api.gaiathonfuta.online/model/modeldata/create/');
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch data for export');
+      }
+      
+      const allData = await response.json();
+      
+      if (!allData || allData.length === 0) {
+        alert('No data available to export');
+        return;
+      }
+      
+      // Define CSV headers
+      const headers = [
+        'ID',
+        'Timestamp',
+        'Temperature (°C)',
+        'Humidity (%)',
+        'Atmospheric Pressure',
+        'Heat Index (°C)',
+        'Enthalpy (KJ/KG)',
+        'Soil Moisture (%)',
+        'Sunlight Intensity (%)',
+        'Pollution Level (%)',
+        'CO Level (%)',
+        'Raining',
+        'Latitude',
+        'Longitude',
+        'Battery Voltage (V)'
+      ];
+      
+      // Convert data to CSV format
+      const csvContent = [
+        headers.join(','), // Header row
+        ...allData.map(item => [
+          item.id || '',
+          item.timestamp || '',
+          item.temperature || 0,
+          item.humidity || 0,
+          item.atm_pressure || 0,
+          item.heat_index || 0,
+          item.enthalpy || 0,
+          item.soil_moisture || 0,
+          item.sunlight_intensity || 0,
+          item.pollution_level || 0,
+          item.co_level || 0,
+          item.raining ? 'Yes' : 'No',
+          item.latitude || 0,
+          item.longitude || 0,
+          item.battery_voltage || 0
+        ].join(','))
+      ].join('\n');
+      
+      // Create and download the file
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      
+      if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `environmental_data_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+      
+    } catch (error) {
+      console.error('Error exporting data:', error);
+      alert('Failed to export data. Please try again.');
+    } finally {
+      setExportLoading(false);
     }
   };
 
@@ -791,14 +872,16 @@ function Home() {
                   ))}
                 </Timeline>
                 
-                <Button
-                  type="primary"
-                  className="width-100"
-                  onClick={() => setReverse(!reverse)}
-                  style={{ fontWeight: 'bold', marginTop: '10px' }}
-                >
-                  <MenuUnfoldOutlined /> EXPORT to CSV
-                </Button>
+                <Spin spinning={exportLoading} tip="Exporting data to CSV..." style={{ display: exportLoading ? 'flex' : 'none', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                  <Button
+                    type="primary"
+                    className="width-100"
+                    onClick={handleExportToCSV}
+                    style={{ fontWeight: 'bold', marginTop: '10px' }}
+                  >
+                    <MenuUnfoldOutlined /> EXPORT to CSV
+                  </Button>
+                </Spin>
               </div>
             </Card>
           </Col>
