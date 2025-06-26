@@ -33,6 +33,7 @@ function Home() {
   const [apiData, setApiData] = useState([]);
   const [lastFetchTime, setLastFetchTime] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [locationState, setLocationState] = useState("Fetching...");
   const [explanationLoading, setExplanationLoading] = useState(false);
   const [explanationResult, setExplanationResult] = useState('');
   const [showExplanation, setShowExplanation] = useState(false);
@@ -269,6 +270,26 @@ function Home() {
     longitude: latestApiData ? latestApiData.longitude.toFixed(6) : "0.000000"
   };
 
+  const getLocationState = async (lat, lon) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`
+      );
+      const data = await response.json();
+      const state = data.address.state || data.address.county || "Unknown";
+      return state;
+    } catch (error) {
+      console.error("Reverse geocoding failed:", error);
+      return "Unknown";
+    }
+  };
+
+  useEffect(() => {
+    if (gpsData.latitude && gpsData.longitude) {
+      getLocationState(gpsData.latitude, gpsData.longitude).then(setLocationState);
+    }
+  }, [gpsData.latitude, gpsData.longitude]);
+
   const count = [
     {
       today: "Hazard Type",
@@ -277,7 +298,7 @@ function Home() {
     },
     {
       today: "Location",
-      title: "Lagos State",
+      title: locationState,
       bnb: "bnb2",
     },
     {
