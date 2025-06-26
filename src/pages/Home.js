@@ -72,11 +72,11 @@ function Home() {
             // Main graph data
             temperature: parseFloat(item.temperature) || 0.0,
             humidity: parseFloat(item.humidity) || 0.0,
-            rainfall: item.raining ? 25.0 : 0.0,
+            rainfall: item.raining ? 50.0 : 0.0,
             soilMoisture: parseFloat(item.soil_moisture) || 0.0,
             
             // Side graph 1 data
-            pressure: Math.floor(item.atm_pressure || 0),
+            pressure: Math.floor(item.atm_pressure / 68.94|| 0),
             heatIndex: parseFloat(item.heat_index) || 0.0,
             enthalpy: parseFloat(item.enthalpy) || 0.0,
             
@@ -512,9 +512,9 @@ function Home() {
                     <Line 
                       yAxisId="left" 
                       type="monotone" 
-                      dataKey="temperature" 
-                      stroke="#ff7300" 
-                      name="Temperature (°C)" 
+                      dataKey="soilMoisture" 
+                      stroke="#8B4513" 
+                      name="Soil Moisture (%)" 
                       strokeWidth={3}
                       dot={{ r: 4, strokeWidth: 2 }}
                       activeDot={{ r: 6, strokeWidth: 2 }}
@@ -532,9 +532,9 @@ function Home() {
                     <Line 
                       yAxisId="left" 
                       type="monotone" 
-                      dataKey="soilMoisture" 
-                      stroke="#8B4513" 
-                      name="Soil Moisture (%)" 
+                      dataKey="rainfall" 
+                      stroke="#0088FE" 
+                      name="Rainfall" 
                       strokeWidth={3}
                       dot={{ r: 4, strokeWidth: 2 }}
                       activeDot={{ r: 6, strokeWidth: 2 }}
@@ -542,9 +542,9 @@ function Home() {
                     <Line 
                       yAxisId="left" 
                       type="monotone" 
-                      dataKey="rainfall" 
-                      stroke="#0088FE" 
-                      name="Rainfall" 
+                      dataKey="temperature" 
+                      stroke="#ff7300" 
+                      name="Temperature (°C)" 
                       strokeWidth={3}
                       dot={{ r: 4, strokeWidth: 2 }}
                       activeDot={{ r: 6, strokeWidth: 2 }}
@@ -589,9 +589,9 @@ function Home() {
                 <Title level={5} style={{ fontWeight: 'bold' }}>Current Values</Title>
                 <Timeline className="timelinelist" reverse={reverse} style={{marginTop:20}}>
                   {[
-                    { name: "Temperature", value: `${currentValues.temperature} °C`, color: "brown" },
+                    { name: "Soil Moisture", value: `${currentValues.soilMoisture} %`, color: "brown" },
                     { name: "Humidity", value: `${currentValues.humidity} %`, color: "green" },
-                    { name: "Soil Moisture", value: `${currentValues.soilMoisture} %`, color: "orange" },
+                    { name: "Temperature", value: `${currentValues.temperature} °C`, color: "orange" },
                     { name: "Sunlight Intensity", value: `${currentValues.sunlight} %`, color: "blue" },
                   ].map((item, index) => (
                     <Timeline.Item color={item.color} key={index}>
@@ -600,7 +600,7 @@ function Home() {
                     </Timeline.Item>
                   ))}
                 </Timeline><br/>
-                <p><strong>N.B:  Rainfall is either 25 or 0 o n the graph, 25 to denote rainfall at the moment and 0 to denote no raifall </strong></p>
+                <p><strong>N.B:  Rainfall is either 50 or 0 o n the graph, 25 to denote rainfall at the moment and 0 to denote no raifall </strong></p>
               </div>
             </Card>
           </Col>
@@ -653,29 +653,29 @@ function Home() {
                     <Line 
                       yAxisId="left" 
                       type="monotone" 
-                      dataKey="pressure" 
-                      stroke="#003366" 
-                      name="Pressure (Pa)" 
-                      strokeWidth={3}
-                      dot={{ r: 3, strokeWidth: 2 }}
-                      activeDot={{ r: 5, strokeWidth: 2 }}
-                    />
-                    <Line 
-                      yAxisId="left" 
-                      type="monotone" 
-                      dataKey="pollutionLevel" 
-                      stroke="#8B4513" 
-                      name="Pollution Level (%)" 
-                      strokeWidth={3}
-                      dot={{ r: 3, strokeWidth: 2 }}
-                      activeDot={{ r: 5, strokeWidth: 2 }}
-                    />
-                    <Line 
-                      yAxisId="left" 
-                      type="monotone" 
                       dataKey="enthalpy" 
                       stroke="#0000FF" 
                       name="Enthalpy (KJ/KG)" 
+                      strokeWidth={3}
+                      dot={{ r: 3, strokeWidth: 2 }}
+                      activeDot={{ r: 5, strokeWidth: 2 }}
+                    />
+                    <Line 
+                      yAxisId="left" 
+                      type="monotone" 
+                      dataKey="heatIndex" 
+                      stroke="#cc0000" 
+                      name="Heat Index (C)" 
+                      strokeWidth={3}
+                      dot={{ r: 3, strokeWidth: 2 }}
+                      activeDot={{ r: 5, strokeWidth: 2 }}
+                    />
+                    <Line 
+                      yAxisId="left" 
+                      type="monotone" 
+                      dataKey="pressure" 
+                      stroke="#003366" 
+                      name="Atmospheric Pressure (psi)" 
                       strokeWidth={3}
                       dot={{ r: 3, strokeWidth: 2 }}
                       activeDot={{ r: 5, strokeWidth: 2 }}
@@ -720,9 +720,9 @@ function Home() {
                     <Line 
                       yAxisId="left" 
                       type="monotone" 
-                      dataKey="heatIndex" 
-                      stroke="#cc0000" 
-                      name="Heat Index (C)" 
+                      dataKey="pollutionLevel" 
+                      stroke="#8B4513" 
+                      name="Pollution Level (%)" 
                       strokeWidth={3}
                       dot={{ r: 3, strokeWidth: 2 }}
                       activeDot={{ r: 5, strokeWidth: 2 }}
@@ -756,10 +756,10 @@ function Home() {
                 <Title level={5} style={{ fontWeight: 'bold', paddingBottom: 20 }}>Additional Values</Title>
                 <Timeline className="timelinelist" reverse={reverse}>
                   {[
-                    { name: "Pressure", value: `${currentValues.pressure} Pa`, color: "blue" },
-                    { name: "Pollution Level", value: `${currentValues.pollutionLevel} %`, color: "brown"},
                     { name: "Enthalpy", value: `${currentValues.enthalpy} KJ/KG`, color: "blue" },
                     { name: "Heat Index", value: `${currentValues.heatIndex} C`, color: "red" },
+                    { name: "Atmospheric Pressure", value: `${currentValues.pressure} psi`, color: "blue" },
+                    { name: "Pollution Level", value: `${currentValues.pollutionLevel} %`, color: "brown"},
                     { name: "CO2 Level", value: `${currentValues.co2} %`, color: "blue" },
                     { name: "Battery", value: `${currentValues.batteryVoltage} V`, color: "green"},
                   ].map((item, index) => (
