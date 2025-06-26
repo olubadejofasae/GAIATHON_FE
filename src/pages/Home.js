@@ -73,7 +73,6 @@ function Home() {
             temperature: parseFloat(item.temperature) || 0.0,
             humidity: parseFloat(item.humidity) || 0.0,
             rainfall: item.raining ? 25.0 : 0.0,
-            windSpeed: parseFloat(item.wind_speed) || 0.0,
             soilMoisture: parseFloat(item.soil_moisture) || 0.0,
             
             // Side graph 1 data
@@ -87,7 +86,6 @@ function Home() {
             pollutionLevel: item.pollution_level || 0,
             
             // Common data
-            windDirection: item.wind_direction || 0,
             sunlight: parseFloat(item.sunlight_intensity) || 0
           }));
 
@@ -257,12 +255,11 @@ function Home() {
     temperature: 0.0,
     humidity: 0.0,
     rainfall: 0.0,
-    windSpeed: 0.0,
     pressure: 0,
     heatIndex: 0.0,
     co2: 0,
     batteryVoltage: 0.0,
-    windDirection: 0,
+    pollutionLevel: 0,
     sunlight: 0
   };
 
@@ -555,9 +552,9 @@ function Home() {
                     <Line 
                       yAxisId="right" 
                       type="monotone" 
-                      dataKey="windSpeed" 
+                      dataKey="sunlight" 
                       stroke="#0000FF" 
-                      name="Wind Speed (km/h)" 
+                      name="Sunlight Intensity (%)" 
                       strokeWidth={3}
                       dot={{ r: 4, strokeWidth: 2 }}
                       activeDot={{ r: 6, strokeWidth: 2 }}
@@ -667,9 +664,9 @@ function Home() {
                     <Line 
                       yAxisId="left" 
                       type="monotone" 
-                      dataKey="windDirection" 
+                      dataKey="pollutionLevel" 
                       stroke="#8B4513" 
-                      name="Wind Direction" 
+                      name="Pollution Level (%)" 
                       strokeWidth={3}
                       dot={{ r: 3, strokeWidth: 2 }}
                       activeDot={{ r: 5, strokeWidth: 2 }}
