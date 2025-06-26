@@ -540,7 +540,7 @@ function Home() {
                       activeDot={{ r: 6, strokeWidth: 2 }}
                     />
                     <Line 
-                      yAxisId="right" 
+                      yAxisId="left" 
                       type="monotone" 
                       dataKey="rainfall" 
                       stroke="#0088FE" 
@@ -550,7 +550,7 @@ function Home() {
                       activeDot={{ r: 6, strokeWidth: 2 }}
                     />
                     <Line 
-                      yAxisId="right" 
+                      yAxisId="left" 
                       type="monotone" 
                       dataKey="sunlight" 
                       stroke="#0000FF" 
@@ -589,11 +589,10 @@ function Home() {
                 <Title level={5} style={{ fontWeight: 'bold' }}>Current Values</Title>
                 <Timeline className="timelinelist" reverse={reverse} style={{marginTop:20}}>
                   {[
-                    { name: "Temperature", value: `${currentValues.temperature} °C`, color: currentValues.temperature > 25 ? "red" : "blue" },
-                    { name: "Humidity", value: `${currentValues.humidity}%`, color: currentValues.humidity > 70 ? "red" : "green" },
-                    { name: "Sunlight Intensity", value: `${currentValues.sunlight_intensity} %`, color: currentValues.sunlight_intensity > 50 ? "red" : "green" },
-                    { name: "Wind Speed", value: `${currentValues.windSpeed} km/h`, color: currentValues.windSpeed > 30 ? "red" : "green" },
-                    { name: "Soil Moisture", value: `${currentValues.soilMoisture} %`, color: currentValues.soilMoisture < 30 ? "red" : "green" }
+                    { name: "Temperature", value: `${currentValues.temperature} °C`, color: "brown" },
+                    { name: "Humidity", value: `${currentValues.humidity} %`, color: "green" },
+                    { name: "Soil Moisture", value: `${currentValues.soilMoisture} %`, color: "orange" },
+                    { name: "Sunlight Intensity", value: `${currentValues.sunlight} %`, color: "blue" },
                   ].map((item, index) => (
                     <Timeline.Item color={item.color} key={index}>
                       <Title level={5} style={{ fontWeight: 'bold' }}>{item.name}</Title>
@@ -656,7 +655,7 @@ function Home() {
                       type="monotone" 
                       dataKey="pressure" 
                       stroke="#003366" 
-                      name="Pressure (hPa)" 
+                      name="Pressure (Pa)" 
                       strokeWidth={3}
                       dot={{ r: 3, strokeWidth: 2 }}
                       activeDot={{ r: 5, strokeWidth: 2 }}
@@ -676,7 +675,7 @@ function Home() {
                       type="monotone" 
                       dataKey="enthalpy" 
                       stroke="#0000FF" 
-                      name="Enthalpy (J/K)" 
+                      name="Enthalpy (KJ/KG)" 
                       strokeWidth={3}
                       dot={{ r: 3, strokeWidth: 2 }}
                       activeDot={{ r: 5, strokeWidth: 2 }}
@@ -721,19 +720,9 @@ function Home() {
                     <Line 
                       yAxisId="left" 
                       type="monotone" 
-                      dataKey="co2" 
-                      stroke="#003366" 
-                      name="CO2 (ppm)" 
-                      strokeWidth={3}
-                      dot={{ r: 3, strokeWidth: 2 }}
-                      activeDot={{ r: 5, strokeWidth: 2 }}
-                    />
-                    <Line 
-                      yAxisId="right" 
-                      type="monotone" 
-                      dataKey="batteryVoltage" 
-                      stroke="#00AA00" 
-                      name="Battery (V)" 
+                      dataKey="heatIndex" 
+                      stroke="#cc0000" 
+                      name="Heat Index (C)" 
                       strokeWidth={3}
                       dot={{ r: 3, strokeWidth: 2 }}
                       activeDot={{ r: 5, strokeWidth: 2 }}
@@ -741,9 +730,19 @@ function Home() {
                     <Line 
                       yAxisId="left" 
                       type="monotone" 
-                      dataKey="heatIndex" 
-                      stroke="#cc0000" 
-                      name="Heat Index (C)" 
+                      dataKey="co2" 
+                      stroke="#003366" 
+                      name="CO2 Level (%)" 
+                      strokeWidth={3}
+                      dot={{ r: 3, strokeWidth: 2 }}
+                      activeDot={{ r: 5, strokeWidth: 2 }}
+                    />
+                    <Line 
+                      yAxisId="left" 
+                      type="monotone" 
+                      dataKey="batteryVoltage" 
+                      stroke="#00AA00" 
+                      name="Battery (V)" 
                       strokeWidth={3}
                       dot={{ r: 3, strokeWidth: 2 }}
                       activeDot={{ r: 5, strokeWidth: 2 }}
@@ -757,12 +756,12 @@ function Home() {
                 <Title level={5} style={{ fontWeight: 'bold', paddingBottom: 20 }}>Additional Values</Title>
                 <Timeline className="timelinelist" reverse={reverse}>
                   {[
-                    { name: "Pressure", value: `${currentValues.pressure} hPa`, color: "blue" },
-                    { name: "Heat Index", value: `${currentValues.heatIndex}`, color: currentValues.heatIndex > 30 ? "red" : "orange" },
-                    { name: "CO2 Level", value: `${currentValues.co2} ppm`, color: currentValues.co2 > 500 ? "red" : "green" },
-                    { name: "Battery", value: `${currentValues.batteryVoltage} V`, color: currentValues.batteryVoltage < 11.5 ? "red" : "green" },
-                    { name: "Wind Direction", value: `${currentValues.windDirection}`, color: currentValues.windDirection < 11.5 ? "red" : "green" },
-                    { name: "Enthalpy", value: `${currentValues.enthalpy} J/K`, color: currentValues.enthalpy < 11.5 ? "red" : "green" }
+                    { name: "Pressure", value: `${currentValues.pressure} Pa`, color: "blue" },
+                    { name: "Pollution Level", value: `${currentValues.pollutionLevel} %`, color: "brown"},
+                    { name: "Enthalpy", value: `${currentValues.enthalpy} KJ/KG`, color: "blue" },
+                    { name: "Heat Index", value: `${currentValues.heatIndex} C`, color: "red" },
+                    { name: "CO2 Level", value: `${currentValues.co2} %`, color: "blue" },
+                    { name: "Battery", value: `${currentValues.batteryVoltage} V`, color: "green"},
                   ].map((item, index) => (
                     <Timeline.Item color={item.color} key={index}>
                       <Title level={5} style={{ fontWeight: 'bold' }}>{item.name}</Title>
