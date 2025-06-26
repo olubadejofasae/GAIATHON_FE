@@ -287,8 +287,15 @@ function Home() {
 
   const handleLanguageSelect = async () => {
     setShowLanguageModal(false);
-    const profession = selectedProfession || customProfession || "user";
-    const language = selectedLanguage || customLanguage || "English";
+    
+    // Modified logic to use custom values when "other" is selected
+    const profession = selectedProfession === "other" 
+      ? customProfession || "user"
+      : selectedProfession || "user";
+      
+    const language = selectedLanguage === "other" 
+      ? customLanguage || "English"
+      : selectedLanguage || "English";
 
     const endpoint =
       explanationType === "predictions"
@@ -303,7 +310,7 @@ function Home() {
             language,
           }
         : {
-            recent_data: apiData.slice(-10), // last 10 entries
+            recent_data: apiData.slice(-10), 
             use_case: profession,
             language,
           };
@@ -332,6 +339,12 @@ function Home() {
       setExplanationLoading(false);
     }
   };
+
+  const isProfessionValid = selectedProfession && 
+    (selectedProfession !== 'other' || (selectedProfession === 'other' && customProfession.trim()));
+ 
+  const isLanguageValid = selectedLanguage && 
+    (selectedLanguage !== 'other' || (selectedLanguage === 'other' && customLanguage.trim()));
 
   const currentValues = currentData.length > 0 ? currentData[currentData.length - 1] : {
     temperature: 0.0,
@@ -895,6 +908,7 @@ function Home() {
         onOk={handleProfessionSelect}
         onCancel={() => setShowProfessionModal(false)}
         okText="Next"
+        okButtonProps={{ disabled: !isProfessionValid }}
       >
         <Radio.Group 
           value={selectedProfession} 
@@ -928,6 +942,7 @@ function Home() {
         onOk={handleLanguageSelect}
         onCancel={() => setShowLanguageModal(false)}
         okText="Get Explanation"
+        okButtonProps={{ disabled: !isLanguageValid }}
       >
         <Radio.Group 
           value={selectedLanguage} 
