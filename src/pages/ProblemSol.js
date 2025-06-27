@@ -2,581 +2,18 @@ import {
   Row,
   Col,
   Card,
-  Radio,
-  Table,
-  Upload,
-  message,
-  Progress,
-  Button,
-  Avatar,
   Typography,
 } from "antd";
 
-import { ToTopOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
-
 // Images
-import ava1 from "../assets/images/logo-shopify.svg";
-import ava2 from "../assets/images/logo-atlassian.svg";
-import ava3 from "../assets/images/logo-slack.svg";
-import ava5 from "../assets/images/logo-jira.svg";
-import ava6 from "../assets/images/logo-invision.svg";
-import face from "../assets/images/face-1.jpg";
-import face2 from "../assets/images/face-2.jpg";
-import face3 from "../assets/images/face-3.jpg";
-import face4 from "../assets/images/face-4.jpg";
-import face5 from "../assets/images/face-5.jpeg";
-import face6 from "../assets/images/face-6.jpeg";
-import pencil from "../assets/images/pencil.svg";
+import problemGraph from "../assets/images/problem-graph.png"; 
+import solutionDevice from "../assets/images/solution-device.png"; 
 
-const { Title } = Typography;
+const { Title, Paragraph } = Typography;
 
-const formProps = {
-  name: "file",
-  action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-  headers: {
-    authorization: "authorization-text",
-  },
-  onChange(info) {
-    if (info.file.status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
-// table code start
-const columns = [
-  {
-    title: "AUTHOR",
-    dataIndex: "name",
-    key: "name",
-    width: "32%",
-  },
-  {
-    title: "FUNCTION",
-    dataIndex: "function",
-    key: "function",
-  },
-
-  {
-    title: "STATUS",
-    key: "status",
-    dataIndex: "status",
-  },
-  {
-    title: "EMPLOYED",
-    key: "employed",
-    dataIndex: "employed",
-  },
-];
-
-const data = [
-  {
-    key: "1",
-    name: (
-      <>
-        <Avatar.Group>
-          <Avatar
-            className="shape-avatar"
-            shape="square"
-            size={40}
-            src={face2}
-          ></Avatar>
-          <div className="avatar-info">
-            <Title level={5}>Michael John</Title>
-            <p>michael@mail.com</p>
-          </div>
-        </Avatar.Group>{" "}
-      </>
-    ),
-    function: (
-      <>
-        <div className="author-info">
-          <Title level={5}>Manager</Title>
-          <p>Organization</p>
-        </div>
-      </>
-    ),
-
-    status: (
-      <>
-        <Button type="primary" className="tag-primary">
-          ONLINE
-        </Button>
-      </>
-    ),
-    employed: (
-      <>
-        <div className="ant-employed">
-          <span>23/04/18</span>
-          <a href="#pablo">Edit</a>
-        </div>
-      </>
-    ),
-  },
-
-  {
-    key: "2",
-    name: (
-      <>
-        <Avatar.Group>
-          <Avatar
-            className="shape-avatar"
-            shape="square"
-            size={40}
-            src={face3}
-          ></Avatar>
-          <div className="avatar-info">
-            <Title level={5}>Alexa Liras</Title>
-            <p>alexa@mail.com</p>
-          </div>
-        </Avatar.Group>{" "}
-      </>
-    ),
-    function: (
-      <>
-        <div className="author-info">
-          <Title level={5}>Programator</Title>
-          <p>Developer</p>
-        </div>
-      </>
-    ),
-
-    status: (
-      <>
-        <Button className="tag-badge">ONLINE</Button>
-      </>
-    ),
-    employed: (
-      <>
-        <div className="ant-employed">
-          <span>23/12/20</span>
-          <a href="#pablo">Edit</a>
-        </div>
-      </>
-    ),
-  },
-
-  {
-    key: "3",
-    name: (
-      <>
-        <Avatar.Group>
-          <Avatar
-            className="shape-avatar"
-            shape="square"
-            size={40}
-            src={face}
-          ></Avatar>
-          <div className="avatar-info">
-            <Title level={5}>Laure Perrier</Title>
-            <p>laure@mail.com</p>
-          </div>
-        </Avatar.Group>{" "}
-      </>
-    ),
-    function: (
-      <>
-        <div className="author-info">
-          <Title level={5}>Executive</Title>
-          <p>Projects</p>
-        </div>
-      </>
-    ),
-
-    status: (
-      <>
-        <Button type="primary" className="tag-primary">
-          ONLINE
-        </Button>
-      </>
-    ),
-    employed: (
-      <>
-        <div className="ant-employed">
-          <span>03/04/21</span>
-          <a href="#pablo">Edit</a>
-        </div>
-      </>
-    ),
-  },
-  {
-    key: "4",
-    name: (
-      <>
-        <Avatar.Group>
-          <Avatar
-            className="shape-avatar"
-            shape="square"
-            size={40}
-            src={face4}
-          ></Avatar>
-          <div className="avatar-info">
-            <Title level={5}>Miriam Eric</Title>
-            <p>miriam@mail.com</p>
-          </div>
-        </Avatar.Group>{" "}
-      </>
-    ),
-    function: (
-      <>
-        <div className="author-info">
-          <Title level={5}>Marketing</Title>
-          <p>Organization</p>
-        </div>
-      </>
-    ),
-
-    status: (
-      <>
-        <Button type="primary" className="tag-primary">
-          ONLINE
-        </Button>
-      </>
-    ),
-    employed: (
-      <>
-        <div className="ant-employed">
-          <span>03/04/21</span>
-          <a href="#pablo">Edit</a>
-        </div>
-      </>
-    ),
-  },
-  {
-    key: "5",
-    name: (
-      <>
-        <Avatar.Group>
-          <Avatar
-            className="shape-avatar"
-            shape="square"
-            size={40}
-            src={face5}
-          ></Avatar>
-          <div className="avatar-info">
-            <Title level={5}>Richard Gran</Title>
-            <p>richard@mail.com</p>
-          </div>
-        </Avatar.Group>{" "}
-      </>
-    ),
-    function: (
-      <>
-        <div className="author-info">
-          <Title level={5}>Manager</Title>
-          <p>Organization</p>
-        </div>
-      </>
-    ),
-
-    status: (
-      <>
-        <Button className="tag-badge">ONLINE</Button>
-      </>
-    ),
-    employed: (
-      <>
-        <div className="ant-employed">
-          <span>23/03/20</span>
-          <a href="#pablo">Edit</a>
-        </div>
-      </>
-    ),
-  },
-
-  {
-    key: "6",
-    name: (
-      <>
-        <Avatar.Group>
-          <Avatar
-            className="shape-avatar"
-            shape="square"
-            size={40}
-            src={face6}
-          ></Avatar>
-          <div className="avatar-info">
-            <Title level={5}>John Levi</Title>
-            <p>john@mail.com</p>
-          </div>
-        </Avatar.Group>{" "}
-      </>
-    ),
-    function: (
-      <>
-        <div className="author-info">
-          <Title level={5}>Tester</Title>
-          <p>Developer</p>
-        </div>
-      </>
-    ),
-
-    status: (
-      <>
-        <Button className="tag-badge">ONLINE</Button>
-      </>
-    ),
-    employed: (
-      <>
-        <div className="ant-employed">
-          <span>14/04/17</span>
-          <a href="#pablo">Edit</a>
-        </div>
-      </>
-    ),
-  },
-];
-// project table start
-const project = [
-  {
-    title: "COMPANIES",
-    dataIndex: "name",
-    width: "32%",
-  },
-  {
-    title: "BUDGET",
-    dataIndex: "age",
-  },
-  {
-    title: "STATUS",
-    dataIndex: "address",
-  },
-  {
-    title: "COMPLETION",
-    dataIndex: "completion",
-  },
-];
-const dataproject = [
-  {
-    key: "1",
-
-    name: (
-      <>
-        <Avatar.Group>
-          <Avatar className="shape-avatar" src={ava1} size={25} alt="" />
-          <div className="avatar-info">
-            <Title level={5}>Spotify Version</Title>
-          </div>
-        </Avatar.Group>
-      </>
-    ),
-    age: (
-      <>
-        <div className="semibold">$14,000</div>
-      </>
-    ),
-    address: (
-      <>
-        <div className="text-sm">working</div>
-      </>
-    ),
-    completion: (
-      <>
-        <div className="ant-progress-project">
-          <Progress percent={30} size="small" />
-          <span>
-            <Link to="/">
-              <img src={pencil} alt="" />
-            </Link>
-          </span>
-        </div>
-      </>
-    ),
-  },
-
-  {
-    key: "2",
-    name: (
-      <>
-        <Avatar.Group>
-          <Avatar className="shape-avatar" src={ava2} size={25} alt="" />
-          <div className="avatar-info">
-            <Title level={5}>Progress Track</Title>
-          </div>
-        </Avatar.Group>
-      </>
-    ),
-    age: (
-      <>
-        <div className="semibold">$3,000</div>
-      </>
-    ),
-    address: (
-      <>
-        <div className="text-sm">working</div>
-      </>
-    ),
-    completion: (
-      <>
-        <div className="ant-progress-project">
-          <Progress percent={10} size="small" />
-          <span>
-            <Link to="/">
-              <img src={pencil} alt="" />
-            </Link>
-          </span>
-        </div>
-      </>
-    ),
-  },
-
-  {
-    key: "3",
-    name: (
-      <>
-        <Avatar.Group>
-          <Avatar className="shape-avatar" src={ava3} size={25} alt="" />
-          <div className="avatar-info">
-            <Title level={5}> Jira Platform Errors</Title>
-          </div>
-        </Avatar.Group>
-      </>
-    ),
-    age: (
-      <>
-        <div className="semibold">Not Set</div>
-      </>
-    ),
-    address: (
-      <>
-        <div className="text-sm">done</div>
-      </>
-    ),
-    completion: (
-      <>
-        <div className="ant-progress-project">
-          <Progress percent={100} size="small" format={() => "done"} />
-          <span>
-            <Link to="/">
-              <img src={pencil} alt="" />
-            </Link>
-          </span>
-        </div>
-      </>
-    ),
-  },
-
-  {
-    key: "4",
-    name: (
-      <>
-        <Avatar.Group>
-          <Avatar className="shape-avatar" src={ava5} size={25} alt="" />
-          <div className="avatar-info">
-            <Title level={5}> Launch new Mobile App</Title>
-          </div>
-        </Avatar.Group>
-      </>
-    ),
-    age: (
-      <>
-        <div className="semibold">$20,600</div>
-      </>
-    ),
-    address: (
-      <>
-        <div className="text-sm">canceled</div>
-      </>
-    ),
-    completion: (
-      <>
-        <div className="ant-progress-project">
-          <Progress
-            percent={50}
-            size="small"
-            status="exception"
-            format={() => "50%"}
-          />
-          <span>
-            <Link to="/">
-              <img src={pencil} alt="" />
-            </Link>
-          </span>
-        </div>
-      </>
-    ),
-  },
-
-  {
-    key: "5",
-    name: (
-      <>
-        <Avatar.Group>
-          <Avatar className="shape-avatar" src={ava5} size={25} alt="" />
-          <div className="avatar-info">
-            <Title level={5}>Web Dev</Title>
-          </div>
-        </Avatar.Group>
-      </>
-    ),
-    age: (
-      <>
-        <div className="semibold">$4,000</div>
-      </>
-    ),
-    address: (
-      <>
-        <div className="text-sm">working</div>
-      </>
-    ),
-    completion: (
-      <>
-        <div className="ant-progress-project">
-          <Progress percent={80} size="small" />
-          <span>
-            <Link to="/">
-              <img src={pencil} alt="" />
-            </Link>
-          </span>
-        </div>
-      </>
-    ),
-  },
-
-  {
-    key: "6",
-    name: (
-      <>
-        <Avatar.Group>
-          <Avatar className="shape-avatar" src={ava6} size={25} alt="" />
-          <div className="avatar-info">
-            <Title level={5}>Redesign Online Store</Title>
-          </div>
-        </Avatar.Group>
-      </>
-    ),
-    age: (
-      <>
-        <div className="semibold">$2,000</div>
-      </>
-    ),
-    address: (
-      <>
-        <div className="text-sm">canceled</div>
-      </>
-    ),
-    completion: (
-      <>
-        <div className="ant-progress-project">
-          <Progress percent={0} size="small" />
-          <span>
-            <Link to="/">
-              <img src={pencil} alt="" />
-            </Link>
-          </span>
-        </div>
-      </>
-    ),
-  },
-];
 
 function ProblemSol() {
-  const onChange = (e) => console.log(`radio checked:${e.target.value}`);
+  // const onChange = (e) => console.log(`radio checked:${e.target.value}`);
 
   return (
     <>
@@ -586,58 +23,183 @@ function ProblemSol() {
             <Card
               bordered={false}
               className="criclebox tablespace mb-24"
-              title="Authors Table"
-              extra={
-                <>
-                  <Radio.Group onChange={onChange} defaultValue="a">
-                    <Radio.Button value="a">All</Radio.Button>
-                    <Radio.Button value="b">ONLINE</Radio.Button>
-                  </Radio.Group>
-                </>
+              title={
+                <Title level={4} style={{ margin: 0 }}>
+                  Problem Statement
+                </Title>
               }
+              headStyle={{
+                borderBottom: "1px solid #f0f0f0",
+                marginBottom: "16px",
+              }}
+              bodyStyle={{ padding: "24px" }}
             >
               <div className="table-responsive">
-                <Table
-                  columns={columns}
-                  dataSource={data}
-                  pagination={false}
-                  className="ant-border-space"
-                />
+                <Row gutter={[24, 24]} align="middle">
+                  <Col xs={24} md={12}>
+                    <div style={{ paddingRight: "20px" }}>
+                      <Paragraph style={{ fontSize: "16px", lineHeight: "1.8", color: "#333" }}>
+                        Coastal zones, vital for ecological balance and human
+                        livelihoods, are increasingly exploited as dumping
+                        grounds for sewage, industrial waste and toxic
+                        materials due to rapid urbanization, industrialization
+                        and inadequate waste management. This pollution
+                        cascade disrupts urbanization plans, paralyzes
+                        transportation networks and inflicts severe economic
+                        losses on nations, particularly in developing regions.
+                      </Paragraph>
+                      <Paragraph style={{ fontSize: "16px", lineHeight: "1.8", color: "#333" }}>
+                        Nigeria faces a growing public health and
+                        environmental crisis due to deteriorating air quality
+                        driven by high concentrations of carbon monoxide
+                        (CO), carbon dioxide (CO₂), particulate matter (PM),
+                        and ozone-depleting emissions. According to IQAir
+                        2024, Nigeria ranks among the most polluted
+                        countries in Africa, with annual average PM2.5 levels
+                        in major cities such as Lagos and Port Harcourt
+                        exceeding 5 times the WHO recommended limits.
+                      </Paragraph>
+                      <Paragraph style={{ fontSize: "16px", lineHeight: "1.8", color: "#333" }}>
+                        Castal erosion in West Africa has become a critical and escalating
+                        challenge, threatening economic stability, environmental
+                        sustainability, and social well-being across the region. Between
+                        2010 and 2024, erosion has caused annual losses estimated at $2–
+                        4 billion, damaging key infrastructure, reducing tourism revenues,
+                        and displacing vulnerable communities.
+                        The degradation of coastal ecosystems—such as mangroves and
+                        wetlands—has led to habitat loss and declining biodiversity, while
+                        saltwater intrusion and shoreline retreat have undermined
+                        agriculture and food security. Without urgent and
+                        coordinated action, the socioeconomic and ecological impacts of
+                        coastal erosion will continue to intensify, putting millions of
+                        livelihoods and national economies at risk
+                      </Paragraph>
+                      <Paragraph style={{ fontSize: "16px", lineHeight: "1.8", color: "#333" }}>
+                        Lagos, Nigeria’s largest coastal city, is facing an alarming rate of
+                        relative sea level rise driven by a combination of global and local
+                        factors. Satellite altimetry data show that sea levels in the Gulf of
+                        Guinea have risen by approximately 3–4 mm per year from 1993
+                        to 2021. However, this global trend is further intensified locally
+                        by land subsidence, with InSAR and GPS measurements
+                        indicating that parts of Lagos are sinking at rates of 5–9 mm per
+                        year. This compounding effect significantly increases the risk of
+                        coastal flooding, infrastructure damage, and population
+                        displacement. Despite the growing threat, Nigeria lacks a robust
+                        coastal monitoring system—tide gauges, GNSS stations, and IoT-
+                        based sensor networks remain limited or non-operational across
+                        much of the coastline. As a result, early warning capabilities and
+                        long-term planning are severely constrained, leaving urban
+                        populations increasingly vulnerable to sea level rise and its socio-
+                        economic impacts.
+                      </Paragraph>
+                    </div>
+                  </Col>
+                  <Col xs={24} md={12}>
+                    <div style={{
+                      border: "1px solid #f0f0f0",
+                      borderRadius: "8px",
+                      padding: "10px",
+                      boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+
+                      backgroundColor: "#fff",
+                      width: "100%",
+                      height: "650px"
+                    }}>
+                      <img 
+                        src={problemGraph} 
+                        alt="Problem Graph" 
+                        style={{ 
+                          width: '100%', 
+                          height: '100%',
+                          borderRadius: "4px",
+                          display: "block",
+                          objectFit: "fill",
+                        }} 
+                      />
+                      <p style={{
+                        textAlign: "center",
+                        marginTop: "10px",
+                        color: "#666",
+                        fontSize: "14px"
+                      }}>
+                        Visualization of coastal erosion and pollution impacts
+                      </p>
+                    </div>
+                  </Col>
+                </Row>
               </div>
             </Card>
 
             <Card
               bordered={false}
               className="criclebox tablespace mb-24"
-              title="Projects Table"
-              extra={
-                <>
-                  <Radio.Group onChange={onChange} defaultValue="all">
-                    <Radio.Button value="all">All</Radio.Button>
-                    <Radio.Button value="online">ONLINE</Radio.Button>
-                    <Radio.Button value="store">STORES</Radio.Button>
-                  </Radio.Group>
-                </>
+              title={
+                <Title level={4} style={{ margin: 0 }}>
+                  Proposed Solution
+                </Title>
               }
+              headStyle={{
+                borderBottom: "1px solid #f0f0f0",
+                marginBottom: "16px",
+              }}
+              bodyStyle={{ padding: "24px" }}
             >
               <div className="table-responsive">
-                <Table
-                  columns={project}
-                  dataSource={dataproject}
-                  pagination={false}
-                  className="ant-border-space"
-                />
-              </div>
-              <div className="uploadfile pb-15 shadow-none">
-                <Upload {...formProps}>
-                  <Button
-                    type="dashed"
-                    className="ant-full-box"
-                    icon={<ToTopOutlined />}
-                  >
-                    Click to Upload
-                  </Button>
-                </Upload>
+                <Row gutter={[24, 24]} align="middle">
+                  <Col xs={24} md={12}>
+                    <div style={{
+                      border: "1px solid #f0f0f0",
+                      borderRadius: "8px",
+                      padding: "10px",
+                      boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+
+                      backgroundColor: "#fff",
+                      width: "80%",
+                      height: "650px"
+                    }}>
+                      <img 
+                        src={solutionDevice} 
+                        alt="Problem Graph" 
+                        style={{ 
+                          width: '100%', 
+                          height: '100%',
+                          borderRadius: "4px",
+                          display: "block",
+                          objectFit: "fill",
+                        }} 
+                      />
+                      <p style={{
+                        textAlign: "center",
+                        marginTop: "10px",
+                        color: "#666",
+                        fontSize: "14px"
+                      }}>
+                        3d Visualization of proposed solution
+                      </p>
+                    </div>
+                  </Col>
+                  <Col xs={24} md={12}>
+                    <div style={{ paddingRight: "20px" }}>
+                      <Paragraph style={{ fontSize: "16px", lineHeight: "1.8", color: "#333" }}>
+                        West African countries is experiencing accelerated relative sea level rise driven by global
+                        ocean warming and significant local land subsidence—measured at up to 9 mm/year in some
+                        areas. Satellite altimetry indicates sea levels have risen by about 3–4 mm/year since the early
+                        1990s. However, the absence of a robust, ground-based coastal monitoring infrastructure—
+                        including tide gauges, GNSS stations, and real-time sensors—limits the country’s ability to
+                        assess hazards and respond proactively. This data gap severely hampers flood forecasting,
+                        urban planning, and climate resilience initiatives.
+                        To address this challenge, we propose an integrated coastal monitoring system that
+                        combines Earth Observation (EO) data from satellites with IoT-based sensors. This
+                        hybrid system will enable real-time tracking of sea-level changes, predict flooding, erosion
+                        and salt water intrusion across western africa. By merging satellite altimetry and InSAR
+                        data with smart tide gauges and GNSS-linked IoT nodes, the platform will generate high-
+                        resolution, continuous data streams. These insights will support early warning systems,
+                        inform coastal infrastructure development, and strengthen decision-making for disaster risk
+                        reduction and climate adaptation
+                      </Paragraph>
+                    </div>
+                  </Col>
+                </Row>
               </div>
             </Card>
           </Col>
